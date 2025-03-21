@@ -1,5 +1,6 @@
 {
-  "name": "",
+  "name": "signature-collection",
+  "private": true,
   "type": "module",
   "version": "0.0.1",
   "scripts": {
@@ -9,6 +10,8 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "^12.3.0",
+    "@astrojs/db": "^0.14.8",
     "@tailwindcss/vite": "^4.0.15",
     "astro": "^5.5.4",
     "tailwindcss": "^4.0.15"
