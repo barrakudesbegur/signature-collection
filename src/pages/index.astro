@@ -1,11 +1,158 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
+import { cn } from "../utils/cn";
+import { getEntry } from "astro:content";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const iniciative = await getEntry("iniciatives", "multiuse-venue-in-begur");
+if (!iniciative) return Astro.redirect("/404");
+
+const { Content } = await iniciative.render();
+
+// This would typically come from a database
+const totalSignatories = 123;
+
+// This would typically come from a database
+const hasSigned = true;
 ---
 
-<Layout>
-	<Welcome />
+<Layout
+  title="Iniciativa popular per a un local polivalent a Begur"
+  description="Ajuntament de Begur, és hora de construir un local polivalent a Begur. Uneix-te a la nostra petició per demanar a l'Ajuntament que construeixi un local polivalent per al nostre poble."
+>
+  {
+    iniciative.data.updates.length > 0 && (
+      <div class="hello-bar bg-amber-200 p-4 z-10 space-y-2">
+        {iniciative.data.updates.map((update) => (
+          <div class="max-w-xl mx-auto">
+            <b>Actualització {update.date.toLocaleDateString("ca-ES")}:</b>{" "}
+            {update.message}
+            {update.link && (
+              <a
+                href={update.link}
+                class="underline font-normal whitespace-nowrap"
+              >
+                {update.linkText}
+              </a>
+            )}
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  <div class="max-w-xl mx-auto mt-16 md:mt-24 px-4 sm:px-0 mb-24">
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 justify-between gap-4 items-center"
+    >
+      <address
+        class="col-start-1 row-start-1 not-italic min-w-max whitespace-pre-line"
+      >
+        <b>Entregar a:</b>
+        <br />
+        {iniciative.data.recipient}<br />
+        {iniciative.data.address}<br />
+      </address>
+      <img
+        src="/stamp.svg"
+        alt=""
+        class="col-start-1 row-start-1 sm:col-start-2 w-full ml-auto max-w-[16rem] h-auto -rotate-2 -translate-y-2 shrink opacity-15 sm:opacity-40"
+      />
+    </div>
+
+    <h1 class="font-bold text-3xl sm:text-4xl mt-24">
+      {iniciative.data.title}
+    </h1>
+
+    <article class="text-lg mt-16">
+      <p class="text-lg mb-6">
+        Benvolgut {iniciative.data.recipient},
+      </p>
+
+      <div class="letter">
+        <Content />
+
+        <div class="callout">
+          <h2>A vosaltres, els lectors d'aquesta carta:</h2>
+          <p>
+            Si estàs d'acord amb nosaltres, t'animem a signar aquesta iniciativa
+            popular i compartir-ho amb altres begurencs. El teu suport ajudarà a
+            pressionar l'Ajuntament per fer-ho realitat.
+          </p>
+          <p>
+            Si vols signar com a organització, siusplau, envia'ns un email a
+            <a href={`mailto:${iniciative.data.email}`}>
+              {iniciative.data.email}
+            </a>
+          </p>
+        </div>
+      </div>
+
+      <p class="mt-12">Atentament,</p>
+    </article>
+
+    <div class="text-lg mt-2 mb-8">
+      {
+        iniciative.data.featured.map((signatory) => (
+          <p>
+            <a
+              class={cn(signatory.url && "hover:underline", {
+                "font-handwritten font-bold text-3xl":
+                  signatory.type === "person",
+                "font-sans font-bold": signatory.type === "organization",
+              })}
+              href={signatory.url}
+            >
+              {signatory.name}
+            </a>
+            {signatory.type === "person" && <i>- {signatory.affiliation}</i>}
+            {signatory.type === "organization" && (
+              <i>- {signatory.shortDescription}</i>
+            )}
+          </p>
+        ))
+      }
+      <p class="italic pt-1">
+        i <a href="/signatories" class="underline hover:text-blue-600">
+          {totalSignatories} veïns i veïnes més de Begur
+        </a>
+      </p>
+    </div>
+
+    {
+      hasSigned ? (
+        <div class="px-6 py-8 w-full mt-12 text-lg flex flex-col justify-center items-center rounded-md border-4 border-green-500 shadow-md">
+          <p>La teva firma s'ha enregistrat. Gràcies per participar!</p>
+        </div>
+      ) : (
+        <div class="sticky bottom-0 p-3 border-t border-slate-200 bg-slate-50">
+          <a
+            href="/sign"
+            class="bg-sky-200 border-sky-300 px-4 py-3 w-full max-w-xl mx-auto flex text-xl justify-center items-center gap-2 font-bold rounded-md border-2 hover:bg-sky-100 transition-colors"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
+              />
+            </svg>
+            Signa la carta
+          </a>
+        </div>
+      )
+    }
+
+    <p class="mt-16 text-gray-600 text-sm">
+      Consultes a la premsa: <a href={`mailto:${iniciative.data.email}`}
+        >{iniciative.data.email}</a
+      >
+    </p>
+  </div>
 </Layout>
