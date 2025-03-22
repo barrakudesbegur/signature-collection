@@ -6,7 +6,7 @@ email: hola@barrakudesbegur.org
 signatureTarget: 20_000
 updates:
   - date: 2024-03-22
-    message: "Aixo es una versió de proves! Encara no es final."
+    message: "Això és una prova! No és la versió final."
 featured:
   - type: organization
     name: Barrakudes de Begur
