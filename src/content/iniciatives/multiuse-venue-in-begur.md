@@ -1,6 +1,6 @@
 ---
 title: "Ajuntament de Begur, és hora de construir un local polivalent."
-description: "Petició per a la construcció d'un local polivalent al municipi de Begur"
+description: "Iniciativa popular per a un local polivalent a Begur"
 recipient: "Ajuntament de Begur"
 address: "Plaça de L'Església 8\n17255 Begur"
 email: hola@barrakudesbegur.org

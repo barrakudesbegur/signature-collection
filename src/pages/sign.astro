@@ -1,14 +1,384 @@
 ---
+export const prerender = false;
+
 import Layout from "../layouts/Layout.astro";
+import { actions, isInputError } from "astro:actions";
+import { subYears } from "date-fns";
+import { cn } from "../utils/cn";
+import { count, db, Signator } from "astro:db";
+
+const SUPPORT_EMAIL = "hola@barrakudesbegur.org";
+
+const signatoryCount = (await db.select({ count: count() }).from(Signator))[0]
+  .count;
+
+const result = Astro.getActionResult(actions.signPetition);
+const submissionSuccess = result && !result.error;
+const inputErrors = isInputError(result?.error) ? result.error.fields : {};
 ---
 
 <Layout
   title="Signa la petició - Local polivalent a Begur"
   description="Signa la nostra petició per demanar a l'Ajuntament de Begur que construeixi un local polivalent per al nostre poble."
 >
-  <div class="max-w-xl mx-auto mt-16 md:mt-24 px-4 sm:px-0 mb-24">
-    <h1 class="font-bold text-3xl sm:text-4xl mb-8">Signa la Petició</h1>
+  <div class="max-w-xl mx-auto mt-16 md:mt-24 px-4 mb-24">
+    <p class="text-xl font-bold">
+      Iniciativa popular per a un local polivalent a Begur
+    </p>
 
-    <p>Aquesta pàgina està en construcció.</p>
+    {
+      submissionSuccess ? (
+        <div class="p-6 bg-green-100 border-2 border-green-500 rounded-md text-center">
+          <h2 class="text-xl font-bold text-green-700 mb-2">
+            Gràcies per la teva signatura!
+          </h2>
+          <p class="mb-4">
+            La teva signatura ha estat registrada correctament.
+          </p>
+          <a
+            href="/"
+            class="inline-block px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors"
+          >
+            Tornar a la pàgina principal
+          </a>
+        </div>
+      ) : (
+        <>
+          <p class="mt-4">
+            Uneix-te a {signatoryCount.toLocaleString()} veïns per demanar a
+            l'Ajuntament que proporcioni un espai on fer activitats sense
+            dependre de les condicions meteorològiques.
+          </p>
+          <p class="mt-6">
+            <a
+              href="/"
+              class="underline underline-offset-2 hover:text-blue-600 flex items-center gap-1"
+              data-ancestor="true"
+              aria-current="true"
+            >
+              Llegeix la iniciativa popular{" "}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+                stroke="currentColor"
+                class="size-4"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+                />
+              </svg>
+            </a>
+          </p>
+
+          <form
+            method="POST"
+            class="space-y-6 mt-8"
+            action={actions.signPetition}
+          >
+            {result?.error && !isInputError(result.error) && (
+              <div class="p-4 bg-red-100 border border-red-400 text-red-700 rounded-md">
+                Hi ha hagut errors en el formulari. Si us plau, revisa les dades
+                i torna-ho a provar.
+              </div>
+            )}
+
+            <div class="space-y-4">
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label
+                    for="name"
+                    class="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    Nom
+                  </label>
+                  <input
+                    transition:persist
+                    type="text"
+                    id="name"
+                    name="name"
+                    required
+                    autocomplete="given-name"
+                    class={cn(
+                      "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500",
+                      inputErrors.name ? "border-red-500" : "border-gray-300"
+                    )}
+                    aria-describedby={
+                      inputErrors.name ? "name-error" : undefined
+                    }
+                  />
+                  {inputErrors.name && (
+                    <p id="name-error" class="mt-1 text-sm text-red-600">
+                      {inputErrors.name.join(", ")}
+                    </p>
+                  )}
+                </div>
+
+                <div class="col-span-2">
+                  <label
+                    for="surname"
+                    class="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    Cognoms
+                  </label>
+                  <input
+                    transition:persist
+                    type="text"
+                    id="surname"
+                    name="surname"
+                    required
+                    autocomplete="family-name"
+                    class={cn(
+                      "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500",
+                      inputErrors.surname ? "border-red-500" : "border-gray-300"
+                    )}
+                    aria-describedby={
+                      inputErrors.surname ? "surname-error" : undefined
+                    }
+                  />
+                  {inputErrors.surname && (
+                    <p id="surname-error" class="mt-1 text-sm text-red-600">
+                      {inputErrors.surname.join(", ")}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label
+                    for="dni"
+                    class="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    DNI/NIE
+                  </label>
+                  <input
+                    transition:persist
+                    type="text"
+                    id="dni"
+                    name="dni"
+                    required
+                    autocomplete="on"
+                    aria-label="DNI"
+                    class={cn(
+                      "w-full px-3 uppercase py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500",
+                      inputErrors.dni ? "border-red-500" : "border-gray-300"
+                    )}
+                    aria-describedby={inputErrors.dni ? "id-error" : undefined}
+                  />
+                  {inputErrors.dni && (
+                    <p id="id-error" class="mt-1 text-sm text-red-600">
+                      {inputErrors.dni.join(", ")}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label
+                    for="birthDate"
+                    class="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    Data de naixement
+                  </label>
+                  <input
+                    transition:persist
+                    type="date"
+                    id="birthDate"
+                    name="birthDate"
+                    required
+                    autocomplete="bday"
+                    min={subYears(new Date(), 150).toISOString().split("T")[0]}
+                    max={new Date().toISOString().split("T")[0]}
+                    class={cn(
+                      "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500",
+                      inputErrors.birthDate
+                        ? "border-red-500"
+                        : "border-gray-300"
+                    )}
+                    aria-describedby={
+                      inputErrors.birthDate ? "birthdate-error" : undefined
+                    }
+                  />
+                  {inputErrors.birthDate && (
+                    <p id="birthdate-error" class="mt-1 text-sm text-red-600">
+                      {inputErrors.birthDate.join(", ")}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label
+                    for="municipality"
+                    class="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    Població
+                  </label>
+                  <select
+                    transition:persist
+                    id="municipality"
+                    name="municipality"
+                    required
+                    autocomplete="address-level2"
+                    class={cn(
+                      "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500",
+                      inputErrors.municipality
+                        ? "border-red-500"
+                        : "border-gray-300"
+                    )}
+                    aria-describedby={
+                      inputErrors.municipality
+                        ? "municipality-error"
+                        : undefined
+                    }
+                  >
+                    <option value="" selected disabled hidden />
+                    <option value="Begur">Begur</option>
+                    <option value="Esclanyà">Esclanyà</option>
+                  </select>
+                  {inputErrors.municipality && (
+                    <p
+                      id="municipality-error"
+                      class="mt-1 text-sm text-red-600"
+                    >
+                      {inputErrors.municipality.join(", ")}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div>
+                <label
+                  for="email"
+                  class="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Correu electrònic
+                </label>
+                <input
+                  transition:persist
+                  type="email"
+                  id="email"
+                  name="email"
+                  required
+                  autocomplete="email"
+                  class={cn(
+                    "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500",
+                    inputErrors.email ? "border-red-500" : "border-gray-300"
+                  )}
+                  aria-describedby={
+                    inputErrors.email ? "email-error" : undefined
+                  }
+                />
+                {inputErrors.email && (
+                  <p id="email-error" class="mt-1 text-sm text-red-600">
+                    {inputErrors.email.join(", ")}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label
+                  for="comment"
+                  class="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Comentari públic{" "}
+                  <span class="text-gray-500 font-normal">(opcional)</span>
+                </label>
+                <textarea
+                  transition:persist
+                  id="comment"
+                  name="comment"
+                  rows="3"
+                  autocomplete="off"
+                  class={cn(
+                    "w-full px-3 py-2 border min-h-24 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500",
+                    inputErrors.comment ? "border-red-500" : "border-gray-300"
+                  )}
+                  aria-describedby={
+                    inputErrors.comment ? "comment-error" : undefined
+                  }
+                />
+                {inputErrors.comment && (
+                  <p id="comment-error" class="mt-1 text-sm text-red-600">
+                    {inputErrors.comment.join(", ")}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <label for="public" class="flex items-start cursor-pointer">
+              <div class="flex items-center h-5">
+                <input
+                  transition:persist
+                  id="public"
+                  name="public"
+                  type="checkbox"
+                  class="h-4 w-4 cursor-pointer text-sky-600 focus:ring-sky-500 border-gray-300 rounded"
+                />
+              </div>
+              <div class="ml-3 text-sm">
+                <p class="font-medium text-gray-700">
+                  Mostrar el meu nom complet i comentari públicament.
+                </p>
+                {inputErrors.public && (
+                  <p class="text-sm text-red-600">
+                    {inputErrors.public.join(", ")}
+                  </p>
+                )}
+              </div>
+            </label>
+
+            <label for="subscribed" class="flex items-start cursor-pointer">
+              <div class="flex items-center h-5">
+                <input
+                  transition:persist
+                  id="subscribed"
+                  name="subscribed"
+                  type="checkbox"
+                  class="h-4 w-4 cursor-pointer text-sky-600 focus:ring-sky-500 border-gray-300 rounded"
+                />
+              </div>
+              <div class="ml-3 text-sm">
+                <p class="font-medium text-gray-700">
+                  Rebre actualitzacions sobre l'iniciativa per email.
+                </p>
+
+                {inputErrors.subscribed && (
+                  <p class="text-sm text-red-600">
+                    {inputErrors.subscribed.join(", ")}
+                  </p>
+                )}
+              </div>
+            </label>
+
+            <button
+              type="submit"
+              class="w-full cursor-pointer text-center justify-center mt-8 bg-sky-200 border-sky-300 hover:bg-sky-100 transition-colors font-bold py-2 px-4 rounded border-2 flex items-center gap-3"
+            >
+              Signar la petició
+            </button>
+
+            <p class="mt-12 text-sm text-gray-600">
+              Al signar, les dades proporcionades es guardaràn a la nostra base
+              de dades indefinidament. El teu nom sencer i comentari seran
+              visibles públicament a la llista de signataris, si així ho has
+              marcat. Pots sol·licitar eliminar la teva firma en qualsevol
+              moment contactant-nos per email.
+            </p>
+            <p class="pt-2  text-sm text-gray-600">
+              Per qualsevol dubte o problema, pots contactar-nos a
+              <a
+                href={`mailto:${SUPPORT_EMAIL}`}
+                class="text-blue-600 hover:underline"
+              >
+                {SUPPORT_EMAIL}
+              </a>
+            </p>
+          </form>
+        </>
+      )
+    }
   </div>
 </Layout>

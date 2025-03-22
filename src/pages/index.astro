@@ -1,5 +1,8 @@
 ---
+export const prerender = false;
+
 import { getEntry } from "astro:content";
+import { count, db, Signator } from "astro:db";
 import Layout from "../layouts/Layout.astro";
 import { cn } from "../utils/cn";
 
@@ -8,10 +11,11 @@ if (!iniciative) return Astro.redirect("/404");
 
 const { Content } = await iniciative.render();
 
-// This would typically come from a database
-const totalSignatories = 123;
+// Get total signatories count from database
+const result = await db.select({ count: count() }).from(Signator);
+const signatoryCount = result[0].count;
 
-// This would typically come from a database
+// Check if user has signed - this would be implemented with sessions
 const hasSigned = false;
 ---
 
@@ -113,7 +117,7 @@ const hasSigned = false;
       }
       <p class="italic pt-1">
         i <a href="/signatories" class="underline hover:text-blue-600">
-          {totalSignatories} veïns i veïnes més de Begur
+          {signatoryCount.toLocaleString()} veïns i veïnes més de Begur
         </a>
       </p>
     </div>
