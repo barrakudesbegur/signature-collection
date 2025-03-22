@@ -1,0 +1,23 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NODE_ENV: production
+        ASTRO_DB_REMOTE_URL: http://db:8080
+    expose:
+      - "4321"
+    environment:
+      NODE_ENV: production
+      ASTRO_DB_REMOTE_URL: http://db:8080
+    restart: unless-stopped
+
+  db:
+    image: ghcr.io/tursodatabase/libsql-server:latest
+    platform: linux/amd64
+    expose:
+      - "8080"
+      - "5001"
+    volumes:
+      - ./data/libsql:/var/lib/sqld
