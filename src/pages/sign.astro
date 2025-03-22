@@ -9,6 +9,10 @@ import { count, db, Signator } from "astro:db";
 
 const SUPPORT_EMAIL = "hola@barrakudesbegur.org";
 
+if (Astro.cookies.has("signed")) {
+  return Astro.redirect("/#signed", 302);
+}
+
 const signatoryCount = (await db.select({ count: count() }).from(Signator))[0]
   .count;
 

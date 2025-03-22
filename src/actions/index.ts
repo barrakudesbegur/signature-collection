@@ -76,7 +76,7 @@ export const server = {
       email: z.string().email("L'email no és vàlid"),
       subscribed: z.coerce.boolean().default(false),
     }),
-    async handler(input) {
+    async handler(input, { cookies }) {
       const existingSignatory = await db
         .selectDistinct({ id: Signator.id })
         .from(Signator)
@@ -87,19 +87,27 @@ export const server = {
         console.log(
           `Signatory with identificationDocument ${input.dni} already exists`
         );
-        return;
+      } else {
+        await db.insert(Signator).values({
+          name: input.name,
+          surname: input.surname,
+          identificationDocument: input.dni,
+          birthDate: input.birthDate,
+          municipality: input.municipality,
+          public: input.public,
+          comment: input.comment,
+          email: input.email,
+          subscribed: input.subscribed,
+        });
       }
 
-      await db.insert(Signator).values({
-        name: input.name,
-        surname: input.surname,
-        identificationDocument: input.dni,
-        birthDate: input.birthDate,
-        municipality: input.municipality,
-        public: input.public,
-        comment: input.comment,
-        email: input.email,
-        subscribed: input.subscribed,
+      // Set cookie to remember that the user has signed
+      cookies.set("signed", "true", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+        path: "/",
+        maxAge: 60 * 60 * 24 * 365, // 1 year
       });
     },
   }),
