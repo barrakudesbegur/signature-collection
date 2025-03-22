@@ -5,9 +5,9 @@ const iniciativeCollection = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string(),
-    recipient: z.string(),
-    address: z.string(),
+    author: z.string(),
     email: z.string().optional(),
+    signatureTarget: z.number().optional(),
     featured: z
       .array(
         z.discriminatedUnion("type", [
