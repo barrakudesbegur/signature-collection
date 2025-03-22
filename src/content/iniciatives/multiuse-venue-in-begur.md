@@ -1,5 +1,5 @@
 ---
-title: "Ajuntament de Begur, és hora de construir un local polivalent."
+title: "Iniciativa popular per a un local polivalent a Begur"
 description: "Iniciativa popular per a un local polivalent a Begur"
 author: "l'associacionisme begurenc"
 email: hola@barrakudesbegur.org
