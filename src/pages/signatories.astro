@@ -116,18 +116,11 @@ const paginationRange = getPaginationRange(page, totalPages);
             <ul class="divide-y divide-gray-200">
               {publicSignatories.map((signatory) => (
                 <li class="p-4 hover:bg-gray-50">
-                  <div class="flex justify-between">
-                    <div>
-                      <h3 class="font-medium inline">
-                        {signatory.name} {signatory.surname}
-                      </h3>
-                      <span class="text-sm text-gray-600">
-                        {/^h?[aeiou](?!els?\b)/i.test(signatory.municipality)
-                          ? `d'${signatory.municipality}`
-                          : `de ${signatory.municipality}`}
-                      </span>
-                    </div>
-                    <div class="text-sm text-right text-gray-500">
+                  <div class="flex items-center justify-between">
+                    <h3 class="font-medium leading-none text-2xl sm:text-3xl inline font-handwritten">
+                      {signatory.name} {signatory.surname}
+                    </h3>
+                    <div class="text-sm text-center text-balance text-gray-500">
                       <time
                         datetime={signatory.createdAt.toISOString()}
                         title={new Date(signatory.createdAt).toLocaleDateString(
