@@ -9,8 +9,14 @@ export const server = {
   signPetition: defineAction({
     accept: "form",
     input: z.object({
-      name: z.string().min(2, "El nom és obligatori"),
-      surname: z.string().min(2, "El cognom és obligatori"),
+      name: z
+        .string()
+        .min(2, "El nom és obligatori")
+        .max(100, "El nom no pot superar 100 caracters"),
+      surname: z
+        .string()
+        .min(2, "El cognom és obligatori")
+        .max(100, "El cognom no pot superar 100 caracters"),
       dni: z
         .string()
         .min(1, "El document d'identitat és obligatori")
@@ -47,7 +53,7 @@ export const server = {
       public: z.coerce.boolean().default(false),
       comment: z
         .string()
-        .max(500, "El comentari no pot superar 1000 caracters")
+        .max(500, "El comentari no pot superar 500 caracters")
         .refine(
           (value) => {
             if (!value) return true;
