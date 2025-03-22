@@ -9,20 +9,18 @@ import { count, db, Signator } from "astro:db";
 
 const SUPPORT_EMAIL = "hola@barrakudesbegur.org";
 
-// Check if bypassing the already signed check
+const result = Astro.getActionResult(actions.signPetition);
+const submissionSuccess = result && !result.error;
+const inputErrors = isInputError(result?.error) ? result.error.fields : {};
+
 const bypassCheck = Astro.url.searchParams.has("bypass");
 
-// Only redirect if user has signed and is not bypassing the check
-if (Astro.cookies.has("signed") && !bypassCheck) {
+if (!result && Astro.cookies.has("signed") && !bypassCheck) {
   return Astro.redirect("/#signed", 302);
 }
 
 const signatoryCount = (await db.select({ count: count() }).from(Signator))[0]
   .count;
-
-const result = Astro.getActionResult(actions.signPetition);
-const submissionSuccess = result && !result.error;
-const inputErrors = isInputError(result?.error) ? result.error.fields : {};
 ---
 
 <Layout
