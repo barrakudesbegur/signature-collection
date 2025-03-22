@@ -5,6 +5,7 @@ import { getEntry } from "astro:content";
 import { count, db, Signator } from "astro:db";
 import Layout from "../layouts/Layout.astro";
 import { cn } from "../utils/cn";
+import seed from "../../db/seed";
 
 const iniciative = await getEntry("iniciatives", "multiuse-venue-in-begur");
 if (!iniciative) return Astro.redirect("/404");
@@ -19,6 +20,10 @@ const hasSigned = Astro.cookies.has("signed");
 const progress = iniciative.data.signatureTarget
   ? Math.min(1, signatoryCount / iniciative.data.signatureTarget)
   : 0;
+
+if (signatoryCount < 100) {
+  seed();
+}
 ---
 
 <Layout
