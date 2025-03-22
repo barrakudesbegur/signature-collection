@@ -9,7 +9,11 @@ import { count, db, Signator } from "astro:db";
 
 const SUPPORT_EMAIL = "hola@barrakudesbegur.org";
 
-if (Astro.cookies.has("signed")) {
+// Check if bypassing the already signed check
+const bypassCheck = Astro.url.searchParams.has("bypass");
+
+// Only redirect if user has signed and is not bypassing the check
+if (Astro.cookies.has("signed") && !bypassCheck) {
   return Astro.redirect("/#signed", 302);
 }
 

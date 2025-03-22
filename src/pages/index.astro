@@ -128,6 +128,12 @@ const hasSigned = Astro.cookies.has("signed");
           class="px-6 py-8 w-full mt-12 text-lg flex flex-col justify-center items-center rounded-md border-4 border-green-500 shadow-md"
         >
           <p>La teva firma s'ha enregistrat. Gràcies per participar!</p>
+          <a
+            href="/sign?bypass=true"
+            class="mt-2 text-sm text-blue-600 hover:underline"
+          >
+            Signar com a una altra persona
+          </a>
         </div>
       ) : (
         <div class="sticky bottom-0 p-3 border-t border-slate-200 bg-slate-50">
