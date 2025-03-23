@@ -81,6 +81,9 @@ export const server = {
         .default(null),
       email: z.string().email("L'email no és vàlid"),
       subscribed: z.coerce.boolean().default(false),
+      "accept-privacy": z.coerce.boolean().refine((val) => val, {
+        message: "Has d'acceptar la política de privacitat",
+      }),
     }),
     async handler(input, { cookies }) {
       const existingSignatory = await db

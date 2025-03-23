@@ -91,7 +91,6 @@ const signatoryCount = (await db.select({ count: count() }).from(Signator))[0]
                 i torna-ho a provar.
               </div>
             )}
-
             <div class="space-y-4">
               <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
@@ -314,7 +313,6 @@ const signatoryCount = (await db.select({ count: count() }).from(Signator))[0]
                 )}
               </div>
             </div>
-
             <label for="public" class="flex items-start cursor-pointer">
               <div class="flex items-center h-5">
                 <input
@@ -331,15 +329,15 @@ const signatoryCount = (await db.select({ count: count() }).from(Signator))[0]
                   <a href="/signatories" class="text-blue-600 hover:underline">
                     llista pública de signataris
                   </a>
+                  .
                 </div>
                 {inputErrors.public && (
                   <p class="text-sm text-red-600">
-                    {inputErrors.public.join(", ")}
+                    {inputErrors.public.join(", ")}.
                   </p>
                 )}
               </div>
             </label>
-
             <label for="subscribed" class="flex items-start cursor-pointer">
               <div class="flex items-center h-5">
                 <input
@@ -352,12 +350,42 @@ const signatoryCount = (await db.select({ count: count() }).from(Signator))[0]
               </div>
               <div class="ml-3 text-sm">
                 <div class="font-medium text-gray-700">
-                  Rebre actualitzacions sobre l'iniciativa per email
+                  Rebre actualitzacions sobre l'iniciativa per email.
                 </div>
 
                 {inputErrors.subscribed && (
                   <p class="text-sm text-red-600">
                     {inputErrors.subscribed.join(", ")}
+                  </p>
+                )}
+              </div>
+            </label>
+
+            <label for="accept-privacy" class="flex items-start cursor-pointer">
+              <div class="flex items-center h-5">
+                <input
+                  type="checkbox"
+                  id="accept-privacy"
+                  name="accept-privacy"
+                  required
+                  class="h-4 w-4 cursor-pointer text-sky-600 focus:ring-sky-500 border-gray-300 rounded"
+                />
+              </div>
+              <div class="ml-3 text-sm">
+                <div class="font-medium text-gray-700">
+                  Accepto el tractament de les meves dades segons la{" "}
+                  <a
+                    href="#privacy-policy"
+                    class="text-blue-600 hover:underline"
+                  >
+                    Política de privacitat
+                  </a>
+                  .
+                </div>
+
+                {inputErrors["accept-privacy"] && (
+                  <p class="text-sm text-red-600">
+                    {inputErrors["accept-privacy"].join(", ")}
                   </p>
                 )}
               </div>
@@ -369,23 +397,56 @@ const signatoryCount = (await db.select({ count: count() }).from(Signator))[0]
             >
               Signar la petició
             </button>
-
-            <p class="mt-12 text-sm text-gray-600">
-              Al signar, les dades proporcionades es guardaràn a la nostra base
-              de dades indefinidament. El teu nom sencer i comentari seran
-              visibles públicament a la llista de signataris, si així ho has
-              marcat. Pots sol·licitar eliminar la teva firma en qualsevol
-              moment contactant-nos per email.
-            </p>
-            <p class="pt-2  text-sm text-gray-600">
-              Per qualsevol dubte o problema, pots contactar-nos a
-              <a
-                href={`mailto:${SUPPORT_EMAIL}`}
-                class="text-blue-600 hover:underline"
-              >
-                {SUPPORT_EMAIL}
-              </a>
-            </p>
+            <div
+              id="privacy-policy"
+              class="mt-12 text-sm text-gray-600 space-y-2"
+            >
+              <h3 class="font-bold">Política de privacitat</h3>
+              <p>
+                Per qualsevol dubte o problema, pots contactar-nos a
+                <a
+                  href={`mailto:${SUPPORT_EMAIL}`}
+                  class="text-blue-600 hover:underline"
+                >
+                  {SUPPORT_EMAIL}
+                </a>
+              </p>
+              <p>
+                Les dades recollides tenen finalitat exclusiva de gestionar la
+                petició a l'Ajuntament de Begur i mantenir informats als
+                firmants que ho vulguin sobre l'evolució d'aquesta.
+              </p>
+              <p>
+                Al signar, les dades proporcionades es guardaràn encriptades a
+                la nostra base de dades fins que hagi passat un temps
+                prudencial, de màxim 1 any, després de que la petició sigui
+                acceptada validament per l'Ajuntament de Begur i ja no siguin
+                necessàries.
+              </p>
+              <p>
+                Les dades seran privades, excepte el teu nom i comentari que
+                només es faran públics si ho autoritzes expressament. Les dades
+                només es compartiran amb entitats que siguin estrictament
+                necessàries per a la gestió de la petició, com l'Ajuntament de
+                Begur.
+              </p>
+              <p>
+                Pots retirar la teva firma en qualsevol moment i exercir els
+                teus drets (accés, rectificació, cancel·lació, oposició, etc.)
+                enviant-nos un email.
+              </p>
+              <p>
+                Aquest software és de codi lliure, aquí pots trobar el
+                <a
+                  href="https://github.com/barrakudesbegur/signature-collection"
+                  class="text-blue-600 hover:underline"
+                  rel="noopener noreferrer"
+                >
+                  codi font
+                </a>
+                .
+              </p>
+            </div>
           </form>
         </span>
       )
