@@ -3,8 +3,10 @@ import { db, eq, Signator } from "astro:db";
 import dni from "better-dni";
 import { intervalToDuration } from "date-fns";
 import { z } from "zod";
-import { hashData } from "../utils/encryption";
-import { encryptDataWithEnv } from "../utils/encryptionWithEnv";
+import {
+  encryptDataWithEnv,
+  hashDataWithEnv,
+} from "../utils/encryptionWithEnv";
 
 // Define the action within the server object
 export const server = {
@@ -91,7 +93,9 @@ export const server = {
       const existingSignatory = await db
         .selectDistinct({ id: Signator.id })
         .from(Signator)
-        .where(eq(Signator.identificationDocumentHash, hashData(input.dni)));
+        .where(
+          eq(Signator.identificationDocumentHash, hashDataWithEnv(input.dni))
+        );
 
       if (existingSignatory.length > 0) {
         // Don't error to prevent exposing who has signed
@@ -103,7 +107,7 @@ export const server = {
           name: input.name,
           surname: input.surname,
           identificationDocumentEncrypted: encryptDataWithEnv(input.dni),
-          identificationDocumentHash: hashData(input.dni),
+          identificationDocumentHash: hashDataWithEnv(input.dni),
           birthDate: input.birthDate,
           municipality: input.municipality,
           public: input.public,

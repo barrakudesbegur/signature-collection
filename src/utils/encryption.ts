@@ -79,17 +79,17 @@ export function decryptData(encryptedData: string, decryptKey: string) {
 }
 
 /**
- * Creates a SHA-256 hash of the data
+ * Creates a SHA-256 hash of the data using the salt
  */
-export function hashData(data: string) {
-  return crypto.createHash("sha256").update(data).digest("hex");
+export function hashData(data: string, salt: string) {
+  return crypto.createHmac("sha256", salt).update(data).digest("hex");
 }
 
 /**
- * Verifies if the plaintext matches the hash
+ * Verifies if the plaintext matches the hash using the salt
  */
-export function verifyHash(plaintext: string, hash: string) {
-  const computedHash = hashData(plaintext);
+export function verifyHash(plaintext: string, hash: string, salt: string) {
+  const computedHash = hashData(plaintext, salt);
   return computedHash === hash;
 }
 
