@@ -1,11 +1,12 @@
-import { defineDb, defineTable, column, sql, NOW } from "astro:db";
+import { column, defineDb, defineTable, NOW } from "astro:db";
 
 const Signator = defineTable({
   columns: {
     id: column.number({ primaryKey: true, autoIncrement: true }),
     name: column.text({ optional: false }),
     surname: column.text({ optional: false }),
-    identificationDocument: column.text({ optional: false, unique: true }),
+    identificationDocumentEncrypted: column.text({ optional: false }),
+    identificationDocumentHash: column.text({ optional: false, unique: true }),
     birthDate: column.date({ optional: false }),
     municipality: column.text({ optional: false }),
     public: column.boolean({ default: false }),

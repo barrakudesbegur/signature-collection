@@ -1,8 +1,10 @@
-import { ActionError, defineAction } from "astro:actions";
+import { defineAction } from "astro:actions";
 import { db, eq, Signator } from "astro:db";
-import { intervalToDuration } from "date-fns";
 import dni from "better-dni";
+import { intervalToDuration } from "date-fns";
 import { z } from "zod";
+import { hashData } from "../utils/encryption";
+import { encryptDataWithEnv } from "../utils/encryptionWithEnv";
 
 // Define the action within the server object
 export const server = {
@@ -89,7 +91,7 @@ export const server = {
       const existingSignatory = await db
         .selectDistinct({ id: Signator.id })
         .from(Signator)
-        .where(eq(Signator.identificationDocument, input.dni));
+        .where(eq(Signator.identificationDocumentHash, hashData(input.dni)));
 
       if (existingSignatory.length > 0) {
         // Don't error to prevent exposing who has signed
@@ -100,7 +102,8 @@ export const server = {
         await db.insert(Signator).values({
           name: input.name,
           surname: input.surname,
-          identificationDocument: input.dni,
+          identificationDocumentEncrypted: encryptDataWithEnv(input.dni),
+          identificationDocumentHash: hashData(input.dni),
           birthDate: input.birthDate,
           municipality: input.municipality,
           public: input.public,

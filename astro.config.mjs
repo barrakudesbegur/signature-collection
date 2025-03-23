@@ -20,7 +20,11 @@ export default defineConfig({
         context: "server",
         access: "secret",
       }),
-      ASTRO_DB_APP_TOKEN: envField.string({
+      BASE64_ENCODED_ENCRYPT_KEY: envField.string({
+        context: "server",
+        access: "secret",
+      }),
+      BASE64_ENCODED_DECRYPT_KEY: envField.string({
         context: "server",
         access: "secret",
       }),

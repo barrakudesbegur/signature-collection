@@ -1,7 +1,9 @@
+import { faker } from "@faker-js/faker/locale/es";
 import { db, Signator } from "astro:db";
 import dni from "better-dni";
 import { subDays } from "date-fns";
-import { faker } from "@faker-js/faker/locale/es";
+import { hashData } from "../src/utils/encryption";
+import { encryptDataWithEnv } from "../src/utils/encryptionWithEnv";
 
 // Configure faker to use Spanish locale for more realistic Catalan/Spanish names
 faker.seed(123); // For consistent results
@@ -50,11 +52,14 @@ function generateSignatory(id: number) {
   // 40% chance to subscribe
   const isSubscribed = Math.random() < 0.4;
 
+  const identificationDocument = dni.randomNIF();
+
   return {
     id,
     name,
     surname,
-    identificationDocument: dni.randomNIF(),
+    identificationDocumentEncrypted: encryptDataWithEnv(identificationDocument),
+    identificationDocumentHash: hashData(identificationDocument),
     birthDate,
     municipality: faker.helpers.arrayElement(["Begur", "Esclanyà"]),
     public: isPublic,
