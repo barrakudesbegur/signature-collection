@@ -27,6 +27,7 @@ export default defineConfig({
       BASE64_ENCODED_DECRYPT_KEY: envField.string({
         context: "server",
         access: "secret",
+        optional: true,
       }),
     },
   },

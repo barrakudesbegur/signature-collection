@@ -12,7 +12,7 @@ import {
 const encryptKey = decodeBase64(BASE64_ENCODED_ENCRYPT_KEY);
 const decryptKey = decodeBase64(BASE64_ENCODED_DECRYPT_KEY);
 
-if (!validateKeyPair(encryptKey, decryptKey)) {
+if (encryptKey && decryptKey && !validateKeyPair(encryptKey, decryptKey)) {
   throw new Error(
     "Invalid encryption keys pair. Check your environment variables."
   );
