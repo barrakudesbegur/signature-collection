@@ -49,7 +49,7 @@ const signatoryCount = (await db.select({ count: count() }).from(Signator))[0]
           </a>
         </div>
       ) : (
-        <>
+        <span>
           <p class="mt-4">
             Uneix-te a {signatoryCount.toLocaleString()} veïns per demanar a
             l'Ajuntament que proporcioni un espai on fer activitats sense
@@ -326,9 +326,12 @@ const signatoryCount = (await db.select({ count: count() }).from(Signator))[0]
                 />
               </div>
               <div class="ml-3 text-sm">
-                <p class="font-medium text-gray-700">
-                  Mostrar el meu nom complet i comentari públicament.
-                </p>
+                <div class="font-medium text-gray-700">
+                  Apareixer a la{" "}
+                  <a href="/signatories" class="text-blue-600 hover:underline">
+                    llista pública de signataris
+                  </a>
+                </div>
                 {inputErrors.public && (
                   <p class="text-sm text-red-600">
                     {inputErrors.public.join(", ")}
@@ -348,9 +351,9 @@ const signatoryCount = (await db.select({ count: count() }).from(Signator))[0]
                 />
               </div>
               <div class="ml-3 text-sm">
-                <p class="font-medium text-gray-700">
-                  Rebre actualitzacions sobre l'iniciativa per email.
-                </p>
+                <div class="font-medium text-gray-700">
+                  Rebre actualitzacions sobre l'iniciativa per email
+                </div>
 
                 {inputErrors.subscribed && (
                   <p class="text-sm text-red-600">
@@ -384,7 +387,7 @@ const signatoryCount = (await db.select({ count: count() }).from(Signator))[0]
               </a>
             </p>
           </form>
-        </>
+        </span>
       )
     }
   </div>
