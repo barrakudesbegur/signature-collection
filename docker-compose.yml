@@ -1,16 +1,13 @@
 services:
   app:
+    volumes:
+      - ./.env:/app/.env
+
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-        NODE_ENV: production
-        ASTRO_DB_REMOTE_URL: http://db:8080
     expose:
       - "4321"
-    environment:
-      NODE_ENV: production
-      ASTRO_DB_REMOTE_URL: http://db:8080
     restart: unless-stopped
 
   db:

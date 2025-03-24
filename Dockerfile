@@ -15,10 +15,6 @@ RUN npm install
 
 FROM build-deps AS build
 COPY . .
-ARG NODE_ENV=production
-ARG ASTRO_DB_REMOTE_URL
-ENV NODE_ENV=${NODE_ENV}
-ENV ASTRO_DB_REMOTE_URL=${ASTRO_DB_REMOTE_URL}
 RUN npm run build -- --remote
 
 FROM base AS runtime
