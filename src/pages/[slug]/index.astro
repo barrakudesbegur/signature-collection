@@ -1,18 +1,28 @@
 ---
 export const prerender = false;
 
-import { getEntry } from "astro:content";
-import { count, db, Signator } from "astro:db";
-import Layout from "../layouts/Layout.astro";
-import { cn } from "../utils/cn";
+import { getCollection, getEntry } from "astro:content";
+import { count, db, eq, Signator } from "astro:db";
+import Layout from "../../layouts/Layout.astro";
+import { cn } from "../../utils/cn";
 
-const iniciative = await getEntry("iniciatives", "polivalent");
+export async function getStaticPaths() {
+  const iniciatives = await getCollection("iniciatives");
+  return iniciatives.map((iniciative) => ({
+    params: { slug: iniciative.slug },
+  }));
+}
+
+const iniciative = await getEntry("iniciatives", Astro.params.slug);
 if (!iniciative) return Astro.redirect("/404");
 
 const { Content } = await iniciative.render();
 
 // Get total signatories count from database
-const result = await db.select({ count: count() }).from(Signator);
+const result = await db
+  .select({ count: count() })
+  .from(Signator)
+  .where(eq(Signator.iniciative, iniciative.slug));
 const signatoryCount = result[0].count;
 
 const hasSigned = Astro.cookies.has("signed");
@@ -24,10 +34,7 @@ const target = Array.isArray(iniciative.data.signatureTarget)
 const progress = target ? Math.min(1, signatoryCount / target) : 0;
 ---
 
-<Layout
-  title="Iniciativa popular per a un local polivalent a Begur"
-  description="Ajuntament de Begur, és hora de construir un local polivalent a Begur. Uneix-te a la nostra petició per demanar a l'Ajuntament que construeixi un local polivalent per al nostre poble."
->
+<Layout title={iniciative.data.title} description={iniciative.data.description}>
   {
     iniciative.data.updates.length > 0 && (
       <div class="hello-bar bg-amber-200 p-4 z-10 space-y-2">
@@ -72,7 +79,7 @@ const progress = target ? Math.min(1, signatoryCount / target) : 0;
               {hasSigned && "Has signat, gràcies!"}
             </span>
             <a
-              href="/signatories"
+              href={`/${iniciative.slug}/signatories`}
               class="text-right text-blue-600 hover:underline"
             >
               Veure qui ha signat
@@ -148,7 +155,10 @@ const progress = target ? Math.min(1, signatoryCount / target) : 0;
         ))
       }
       <p class="italic pt-1">
-        i <a href="/signatories" class="underline hover:text-blue-600">
+        i <a
+          href={`/${iniciative.slug}/signatories`}
+          class="underline hover:text-blue-600"
+        >
           {signatoryCount.toLocaleString()} veïns i veïnes més de Begur
         </a>
       </p>
@@ -162,7 +172,7 @@ const progress = target ? Math.min(1, signatoryCount / target) : 0;
         >
           <p>La teva firma s'ha enregistrat. Gràcies per participar!</p>
           <a
-            href="/sign?bypass=true"
+            href={`/${iniciative.slug}/sign?bypass=true`}
             class="mt-2 text-sm text-blue-600 hover:underline"
           >
             Signar com a una altra persona
@@ -171,7 +181,7 @@ const progress = target ? Math.min(1, signatoryCount / target) : 0;
       ) : (
         <div class="sticky bottom-0 p-3 border-t border-slate-200 bg-slate-50">
           <a
-            href="/sign"
+            href={`/${iniciative.slug}/sign?bypass=true`}
             class="bg-sky-200 border-sky-300 px-4 py-3 w-full max-w-xl mx-auto flex text-xl justify-center items-center gap-2 font-bold rounded-md border-2 hover:bg-sky-100 transition-colors"
           >
             <svg

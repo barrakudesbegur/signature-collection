@@ -1,13 +1,18 @@
 ---
 export const prerender = false;
 
-import Layout from "../layouts/Layout.astro";
+import Layout from "../../layouts/Layout.astro";
 import { actions, isInputError } from "astro:actions";
 import { subYears } from "date-fns";
-import { cn } from "../utils/cn";
-import { count, db, Signator } from "astro:db";
+import { cn } from "../../utils/cn";
+import { count, db, eq, Signator } from "astro:db";
+import { getEntry } from "astro:content";
 
-const SUPPORT_EMAIL = "hola@barrakudesbegur.org";
+if (!Astro.params.slug) return Astro.redirect("/404");
+const iniciative = await getEntry("iniciatives", Astro.params.slug);
+if (!iniciative) return Astro.redirect("/404");
+
+const SUPPORT_EMAIL = iniciative.data.email;
 
 const result = Astro.getActionResult(actions.signPetition);
 const submissionSuccess = result && !result.error;
@@ -19,17 +24,21 @@ if (!result && Astro.cookies.has("signed") && !bypassCheck) {
   return Astro.redirect("/#signed", 302);
 }
 
-const signatoryCount = (await db.select({ count: count() }).from(Signator))[0]
-  .count;
+const signatoryCount = (
+  await db
+    .select({ count: count() })
+    .from(Signator)
+    .where(eq(Signator.iniciative, iniciative.slug))
+)[0].count;
 ---
 
 <Layout
-  title="Signa la petició - Local polivalent a Begur"
-  description="Signa la nostra petició per demanar a l'Ajuntament de Begur que construeixi un local polivalent per al nostre poble."
+  title={`Signa la petició - ${iniciative.data.title}`}
+  description={iniciative.data.description}
 >
   <div class="max-w-xl mx-auto mt-16 md:mt-24 px-4 mb-24">
     <p class="text-xl font-bold">
-      Iniciativa popular per a un local polivalent a Begur
+      {iniciative.data.title}
     </p>
 
     {
@@ -42,10 +51,10 @@ const signatoryCount = (await db.select({ count: count() }).from(Signator))[0]
             La teva signatura ha estat registrada correctament.
           </p>
           <a
-            href="/"
+            href={`/${iniciative.slug}`}
             class="inline-block px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors"
           >
-            Tornar a la pàgina principal
+            Tornar a la pàgina de la iniciativa
           </a>
         </div>
       ) : (
@@ -61,7 +70,7 @@ const signatoryCount = (await db.select({ count: count() }).from(Signator))[0]
           </p>
           <p class="mt-6">
             <a
-              href="/"
+              href={`/${iniciative.slug}`}
               class="underline underline-offset-2 hover:text-blue-600 flex items-center gap-1"
               data-ancestor="true"
               aria-current="true"
@@ -89,6 +98,8 @@ const signatoryCount = (await db.select({ count: count() }).from(Signator))[0]
             class="space-y-6 mt-8"
             action={actions.signPetition}
           >
+            <input type="hidden" name="iniciative" value={Astro.params.slug} />
+
             {result?.error && !isInputError(result.error) && (
               <div class="p-4 bg-red-100 border border-red-400 text-red-700 rounded-md">
                 Hi ha hagut errors en el formulari. Si us plau, revisa les dades
@@ -361,7 +372,10 @@ const signatoryCount = (await db.select({ count: count() }).from(Signator))[0]
               <div class="ml-3 text-sm">
                 <div class="font-medium text-gray-700">
                   Apareixer a la{" "}
-                  <a href="/signatories" class="text-blue-600 hover:underline">
+                  <a
+                    href={`/${iniciative.slug}/signatories`}
+                    class="text-blue-600 hover:underline"
+                  >
                     llista pública de signataris
                   </a>
                   .

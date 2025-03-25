@@ -1,5 +1,6 @@
 import { defineAction } from "astro:actions";
-import { db, eq, Signator } from "astro:db";
+import { getEntry } from "astro:content";
+import { and, db, eq, Signator } from "astro:db";
 import dni from "better-dni";
 import { intervalToDuration } from "date-fns";
 import { z } from "zod";
@@ -13,6 +14,13 @@ export const server = {
   signPetition: defineAction({
     accept: "form",
     input: z.object({
+      iniciative: z
+        .string()
+        .min(1, "La iniciativa és obligatoria")
+        .refine(
+          async (value) => (await getEntry("iniciatives", value)) !== null,
+          { message: "La iniciativa no existeix" }
+        ),
       name: z
         .string()
         .min(2, "El nom és obligatori")
@@ -51,7 +59,7 @@ export const server = {
           },
           { message: "Has de tenir almenys 16 anys per signar la petició" }
         ),
-      municipality: z.enum(["Begur", "Esclanyà"], {
+      municipality: z.enum(["Begur", "Esclanyà", "Altres"], {
         errorMap: () => ({ message: "Cal seleccionar un municipi vàlid" }),
       }),
       public: z.coerce.boolean().default(false),
@@ -94,7 +102,10 @@ export const server = {
         .selectDistinct({ id: Signator.id })
         .from(Signator)
         .where(
-          eq(Signator.identificationDocumentHash, hashDataWithEnv(input.dni))
+          and(
+            eq(Signator.identificationDocumentHash, hashDataWithEnv(input.dni)),
+            eq(Signator.iniciative, input.iniciative)
+          )
         );
 
       if (existingSignatory.length > 0) {
@@ -104,6 +115,7 @@ export const server = {
         );
       } else {
         await db.insert(Signator).values({
+          iniciative: input.iniciative,
           name: input.name,
           surname: input.surname,
           identificationDocumentEncrypted: encryptDataWithEnv(input.dni),

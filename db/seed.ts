@@ -6,12 +6,13 @@ import {
   encryptDataWithEnv,
   hashDataWithEnv,
 } from "../src/utils/encryptionWithEnv";
+import { getCollection } from "astro:content";
 
 // Configure faker to use Spanish locale for more realistic Catalan/Spanish names
 faker.seed(123); // For consistent results
 
 // Helper function to generate a random signatory
-function generateSignatory(id: number) {
+function generateSignatory(id: number, iniciative: string) {
   const isMale = Math.random() > 0.5;
   const name = isMale
     ? faker.person.firstName("male")
@@ -58,6 +59,7 @@ function generateSignatory(id: number) {
 
   return {
     id,
+    iniciative,
     name,
     surname,
     identificationDocumentEncrypted: encryptDataWithEnv(identificationDocument),
@@ -76,8 +78,10 @@ function generateSignatory(id: number) {
 
 // https://astro.build/db/seed
 export default async function seed() {
-  const randomSignatories = Array.from({ length: 200 }, (_, i) =>
-    generateSignatory(i)
+  const iniciatives = await getCollection("iniciatives");
+
+  const randomSignatories = iniciatives.flatMap((iniciative) =>
+    Array.from({ length: 200 }, (_, i) => generateSignatory(i, iniciative.slug))
   );
 
   await db.insert(Signator).values(randomSignatories);

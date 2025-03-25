@@ -3,6 +3,7 @@ import { column, defineDb, defineTable, NOW } from "astro:db";
 const Signator = defineTable({
   columns: {
     id: column.number({ primaryKey: true, autoIncrement: true }),
+    iniciative: column.text({ optional: false }),
     name: column.text({ optional: false }),
     surname: column.text({ optional: false }),
     identificationDocumentEncrypted: column.text({ optional: false }),

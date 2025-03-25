@@ -1,12 +1,16 @@
 ---
 export const prerender = false;
 
-import { db, desc, Signator } from "astro:db";
-import Layout from "../layouts/Layout.astro";
-import { cn } from "../utils/cn";
-import { eq } from "astro:db";
+import { getEntry } from "astro:content";
+import { and, count, db, desc, eq, Signator } from "astro:db";
 import { formatDistanceToNow } from "date-fns";
 import { ca } from "date-fns/locale";
+import Layout from "../../layouts/Layout.astro";
+import { cn } from "../../utils/cn";
+
+if (!Astro.params.slug) return Astro.redirect("/404");
+const iniciative = await getEntry("iniciatives", Astro.params.slug);
+if (!iniciative) return Astro.redirect("/404");
 
 // Get page from the query string
 const page = Number(Astro.url.searchParams.get("page") || 1);
@@ -24,21 +28,23 @@ const publicSignatories = await db
     createdAt: Signator.createdAt,
   })
   .from(Signator)
-  .where(eq(Signator.public, true))
+  .where(
+    and(eq(Signator.iniciative, iniciative.slug), eq(Signator.public, true))
+  )
   .orderBy(desc(Signator.createdAt))
   .offset(offset)
   .limit(pageSize);
 
 // Count total signatories (both public and private)
-const allSignatories = await db.select().from(Signator);
-const totalSignatories = allSignatories.length;
+const totalSignatories = (
+  await db
+    .select({ count: count() })
+    .from(Signator)
+    .where(eq(Signator.iniciative, iniciative.slug))
+)[0].count;
 
 // Count public signatories for pagination
-const allPublicSignatories = await db
-  .select()
-  .from(Signator)
-  .where(eq(Signator.public, true));
-const totalPublicSignatories = allPublicSignatories.length;
+const totalPublicSignatories = publicSignatories.length;
 
 // Calculate private signatories count
 const privateSignatoriesCount = totalSignatories - totalPublicSignatories;
@@ -92,15 +98,18 @@ const paginationRange = getPaginationRange(page, totalPages);
 ---
 
 <Layout
-  title="Signataris - Local polivalent a Begur"
-  description="Persones que han signat la nostra petició per demanar a l'Ajuntament de Begur que construeixi un local polivalent per al nostre poble."
+  title={`Signataris - ${iniciative.data.title}`}
+  description={iniciative.data.description}
 >
   <div class="max-w-xl mx-auto mt-16 md:mt-24 px-4 sm:px-0 mb-24">
     <h1 class="font-bold text-3xl sm:text-4xl mb-8">Signataris</h1>
 
     <p class="text-lg mb-8">
       Ja han signat <strong>{totalSignatories}</strong> persones,
-      <a href="/sign?bypass=true" class="text-blue-600 hover:underline">
+      <a
+        href={`/${iniciative.slug}/sign?bypass=true`}
+        class="text-blue-600 hover:underline"
+      >
         signa tu també
       </a>
       !
@@ -154,7 +163,11 @@ const paginationRange = getPaginationRange(page, totalPages);
                   {/* Previous page link */}
                   <li>
                     <a
-                      href={page > 1 ? `/signatories?page=${page - 1}` : "#"}
+                      href={
+                        page > 1
+                          ? `/${iniciative.slug}/signatories?page=${page - 1}`
+                          : "#"
+                      }
                       class={cn(
                         "flex items-center justify-center px-3 h-8 ms-0 leading-tight border border-e-0 border-gray-300 rounded-s-lg",
                         page > 1
@@ -192,7 +205,7 @@ const paginationRange = getPaginationRange(page, totalPages);
                     ) : (
                       <li>
                         <a
-                          href={`/signatories?page=${pageNum}`}
+                          href={`/${iniciative.slug}/signatories?page=${pageNum}`}
                           class={cn(
                             "flex items-center justify-center px-3 h-8 leading-tight border",
                             pageNum === page
@@ -212,7 +225,7 @@ const paginationRange = getPaginationRange(page, totalPages);
                     <a
                       href={
                         page < totalPages
-                          ? `/signatories?page=${page + 1}`
+                          ? `/${iniciative.slug}/signatories?page=${page + 1}`
                           : "#"
                       }
                       class={cn(
@@ -254,10 +267,10 @@ const paginationRange = getPaginationRange(page, totalPages);
 
     <div class="mt-16 flex justify-center">
       <a
-        href="/"
+        href={`/${iniciative.slug}`}
         class="px-5 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
       >
-        Tornar a la pàgina principal
+        Tornar a la pàgina de la iniciativa
       </a>
     </div>
   </div>
