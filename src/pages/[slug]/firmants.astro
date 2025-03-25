@@ -107,7 +107,7 @@ const paginationRange = getPaginationRange(page, totalPages);
     <p class="text-lg mb-8">
       Ja han signat <strong>{totalSignatories}</strong> persones,
       <a
-        href={`/${iniciative.slug}/sign?bypass=true`}
+        href={`/${iniciative.slug}/firmar?bypass=true`}
         class="text-blue-600 hover:underline"
       >
         signa tu també
@@ -165,7 +165,7 @@ const paginationRange = getPaginationRange(page, totalPages);
                     <a
                       href={
                         page > 1
-                          ? `/${iniciative.slug}/signatories?page=${page - 1}`
+                          ? `/${iniciative.slug}/firmants?page=${page - 1}`
                           : "#"
                       }
                       class={cn(
@@ -205,7 +205,7 @@ const paginationRange = getPaginationRange(page, totalPages);
                     ) : (
                       <li>
                         <a
-                          href={`/${iniciative.slug}/signatories?page=${pageNum}`}
+                          href={`/${iniciative.slug}/firmants?page=${pageNum}`}
                           class={cn(
                             "flex items-center justify-center px-3 h-8 leading-tight border",
                             pageNum === page
@@ -225,7 +225,7 @@ const paginationRange = getPaginationRange(page, totalPages);
                     <a
                       href={
                         page < totalPages
-                          ? `/${iniciative.slug}/signatories?page=${page + 1}`
+                          ? `/${iniciative.slug}/firmants?page=${page + 1}`
                           : "#"
                       }
                       class={cn(

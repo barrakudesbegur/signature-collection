@@ -79,7 +79,7 @@ const progress = target ? Math.min(1, signatoryCount / target) : 0;
               {hasSigned && "Has signat, gràcies!"}
             </span>
             <a
-              href={`/${iniciative.slug}/signatories`}
+              href={`/${iniciative.slug}/firmants`}
               class="text-right text-blue-600 hover:underline"
             >
               Veure qui ha signat
@@ -156,7 +156,7 @@ const progress = target ? Math.min(1, signatoryCount / target) : 0;
       }
       <p class="italic pt-1">
         i <a
-          href={`/${iniciative.slug}/signatories`}
+          href={`/${iniciative.slug}/firmants`}
           class="underline hover:text-blue-600"
         >
           {signatoryCount.toLocaleString()} veïns i veïnes més de Begur
@@ -172,7 +172,7 @@ const progress = target ? Math.min(1, signatoryCount / target) : 0;
         >
           <p>La teva firma s'ha enregistrat. Gràcies per participar!</p>
           <a
-            href={`/${iniciative.slug}/sign?bypass=true`}
+            href={`/${iniciative.slug}/firmar?bypass=true`}
             class="mt-2 text-sm text-blue-600 hover:underline"
           >
             Signar com a una altra persona
@@ -181,7 +181,7 @@ const progress = target ? Math.min(1, signatoryCount / target) : 0;
       ) : (
         <div class="sticky bottom-0 p-3 border-t border-slate-200 bg-slate-50">
           <a
-            href={`/${iniciative.slug}/sign?bypass=true`}
+            href={`/${iniciative.slug}/firmar?bypass=true`}
             class="bg-sky-200 border-sky-300 px-4 py-3 w-full max-w-xl mx-auto flex text-xl justify-center items-center gap-2 font-bold rounded-md border-2 hover:bg-sky-100 transition-colors"
           >
             <svg
