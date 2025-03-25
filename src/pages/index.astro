@@ -6,7 +6,7 @@ import { count, db, Signator } from "astro:db";
 import Layout from "../layouts/Layout.astro";
 import { cn } from "../utils/cn";
 
-const iniciative = await getEntry("iniciatives", "multiuse-venue-in-begur");
+const iniciative = await getEntry("iniciatives", "polivalent");
 if (!iniciative) return Astro.redirect("/404");
 
 const { Content } = await iniciative.render();
