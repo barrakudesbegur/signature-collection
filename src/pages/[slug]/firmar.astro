@@ -123,7 +123,7 @@ const signatoryCount = (
                     required
                     autocomplete="given-name"
                     class={cn(
-                      "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500",
+                      "w-full px-3 py-2 border bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500",
                       inputErrors.name ? "border-red-500" : "border-gray-300"
                     )}
                     aria-describedby={
@@ -137,7 +137,7 @@ const signatoryCount = (
                   )}
                 </div>
 
-                <div class="col-span-2">
+                <div class="sm:col-span-2">
                   <label
                     for="surname"
                     class="block text-sm font-medium text-gray-700 mb-1"
@@ -152,7 +152,7 @@ const signatoryCount = (
                     required
                     autocomplete="family-name"
                     class={cn(
-                      "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500",
+                      "w-full px-3 py-2 border bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500",
                       inputErrors.surname ? "border-red-500" : "border-gray-300"
                     )}
                     aria-describedby={
@@ -185,7 +185,7 @@ const signatoryCount = (
                     aria-label="DNI"
                     pattern="^[0-9A-Za-z \-_.]*$"
                     class={cn(
-                      "w-full px-3 uppercase py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500",
+                      "w-full bg-white px-3 uppercase py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500",
                       inputErrors.dni ? "border-red-500" : "border-gray-300"
                     )}
                     aria-describedby={inputErrors.dni ? "id-error" : undefined}
@@ -214,7 +214,7 @@ const signatoryCount = (
                     min={subYears(new Date(), 150).toISOString().split("T")[0]}
                     max={new Date().toISOString().split("T")[0]}
                     class={cn(
-                      "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500",
+                      "w-full px-3 py-2 border bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500",
                       inputErrors.birthDate
                         ? "border-red-500"
                         : "border-gray-300"
@@ -244,7 +244,7 @@ const signatoryCount = (
                     required
                     autocomplete="address-level2"
                     class={cn(
-                      "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500",
+                      "w-full px-3 py-2 border bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500",
                       inputErrors.municipality
                         ? "border-red-500"
                         : "border-gray-300"
@@ -286,7 +286,7 @@ const signatoryCount = (
                   required
                   autocomplete="email"
                   class={cn(
-                    "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500",
+                    "w-full px-3 py-2 border bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500",
                     inputErrors.email ? "border-red-500" : "border-gray-300"
                   )}
                   aria-describedby={
@@ -315,7 +315,7 @@ const signatoryCount = (
                   rows="3"
                   autocomplete="off"
                   class={cn(
-                    "w-full px-3 py-2 border min-h-24 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500",
+                    "w-full px-3 py-2 border bg-white min-h-24 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500",
                     inputErrors.comment ? "border-red-500" : "border-gray-300"
                   )}
                   aria-describedby={
