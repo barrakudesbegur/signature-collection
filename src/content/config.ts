@@ -7,7 +7,7 @@ const iniciativeCollection = defineCollection({
     description: z.string(),
     author: z.string(),
     email: z.string().optional(),
-    signatureTarget: z.number().optional(),
+    signatureTarget: z.number().or(z.array(z.number())).optional(),
     featured: z
       .array(
         z.discriminatedUnion("type", [

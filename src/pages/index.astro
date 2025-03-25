@@ -16,9 +16,12 @@ const result = await db.select({ count: count() }).from(Signator);
 const signatoryCount = result[0].count;
 
 const hasSigned = Astro.cookies.has("signed");
-const progress = iniciative.data.signatureTarget
-  ? Math.min(1, signatoryCount / iniciative.data.signatureTarget)
-  : 0;
+const target = Array.isArray(iniciative.data.signatureTarget)
+  ? (iniciative.data.signatureTarget.find(
+      (target) => signatoryCount < target
+    ) ?? iniciative.data.signatureTarget.at(-1))
+  : iniciative.data.signatureTarget;
+const progress = target ? Math.min(1, signatoryCount / target) : 0;
 ---
 
 <Layout
@@ -52,13 +55,11 @@ const progress = iniciative.data.signatureTarget
     </h1>
 
     {
-      iniciative.data.signatureTarget && (
+      target && (
         <div class="mt-8">
           <div class="flex justify-between mb-1">
             <span>{signatoryCount.toLocaleString()} firmes</span>
-            <span>
-              Objectiu: {iniciative.data.signatureTarget.toLocaleString()}
-            </span>
+            <span>Següent objectiu: {target.toLocaleString()}</span>
           </div>
           <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
             <div
