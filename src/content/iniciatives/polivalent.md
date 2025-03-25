@@ -1,6 +1,6 @@
 ---
 title: "Iniciativa popular per a un local polivalent a Begur"
-description: "Iniciativa popular per a un local polivalent a Begur"
+description: "Una petició ciutadana de l'Associacionisme Begurenc per debatre la creació d’un espai multifuncional que impulsi la cultura, la cohesió social i la participació activa dels veïns de Begur."
 author: "l'associacionisme begurenc"
 email: hola@barrakudesbegur.org
 signatureTarget: [100, 200, 300, 400, 500, 600, 700, 800, 1000, 1200, 1500, 1700, 2000, 2500, 3000, 3500, 4000, 5000, 10000]
