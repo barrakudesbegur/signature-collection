@@ -100,7 +100,10 @@ const paginationRange = getPaginationRange(page, totalPages);
 
     <p class="text-lg mb-8">
       Ja han signat <strong>{totalSignatories}</strong> persones,
-      <a href="/sign" class="text-blue-600 hover:underline">signa tu també</a>!
+      <a href="/sign?bypass=true" class="text-blue-600 hover:underline">
+        signa tu també
+      </a>
+      !
     </p>
 
     {
