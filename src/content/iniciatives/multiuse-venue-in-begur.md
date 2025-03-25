@@ -83,7 +83,7 @@ també trobareu en tots aquells actes organitzats per nosaltres.
 Els pobles petits com el nostre necessiten que l’associacionisme estigui més viu que mai, que el poble
 s’uneixi fent coses i que tots plegats ens sentim orgullosos de formar part d’aquesta comunitat.
 
-Volem deixar ben clar que no tenim cap queixa de la col.laboració i ajuda que l’Ajuntament ens dona en
+Volem deixar ben clar que no tenim cap queixa de la col·laboració i ajuda que l’Ajuntament ens dona en
 molts d’aquests actes, sense la seva participació moltes vegades no seria possible fer-los. Per això
 creiem que ara ha arribat el moment de fer un pas més i unir-nos tots plegats, Associacions i
 Ajuntament, per tirar endavant aquest projecte que farà encara millor el nostre poble.
