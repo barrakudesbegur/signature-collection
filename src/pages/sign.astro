@@ -243,6 +243,7 @@ const signatoryCount = (await db.select({ count: count() }).from(Signator))[0]
                     <option value="" selected disabled hidden />
                     <option value="Begur">Begur</option>
                     <option value="Esclanyà">Esclanyà</option>
+                    <option value="Altres">Altres</option>
                   </select>
                   {inputErrors.municipality && (
                     <p
@@ -313,54 +314,6 @@ const signatoryCount = (await db.select({ count: count() }).from(Signator))[0]
                 )}
               </div>
             </div>
-            <label for="public" class="flex items-start cursor-pointer">
-              <div class="flex items-center h-5">
-                <input
-                  transition:persist
-                  id="public"
-                  name="public"
-                  type="checkbox"
-                  class="h-4 w-4 cursor-pointer text-sky-600 focus:ring-sky-500 border-gray-300 rounded"
-                />
-              </div>
-              <div class="ml-3 text-sm">
-                <div class="font-medium text-gray-700">
-                  Apareixer a la{" "}
-                  <a href="/signatories" class="text-blue-600 hover:underline">
-                    llista pública de signataris
-                  </a>
-                  .
-                </div>
-                {inputErrors.public && (
-                  <p class="text-sm text-red-600">
-                    {inputErrors.public.join(", ")}.
-                  </p>
-                )}
-              </div>
-            </label>
-            <label for="subscribed" class="flex items-start cursor-pointer">
-              <div class="flex items-center h-5">
-                <input
-                  transition:persist
-                  id="subscribed"
-                  name="subscribed"
-                  type="checkbox"
-                  class="h-4 w-4 cursor-pointer text-sky-600 focus:ring-sky-500 border-gray-300 rounded"
-                />
-              </div>
-              <div class="ml-3 text-sm">
-                <div class="font-medium text-gray-700">
-                  Rebre actualitzacions sobre l'iniciativa per email.
-                </div>
-
-                {inputErrors.subscribed && (
-                  <p class="text-sm text-red-600">
-                    {inputErrors.subscribed.join(", ")}
-                  </p>
-                )}
-              </div>
-            </label>
-
             <label for="accept-privacy" class="flex items-start cursor-pointer">
               <div class="flex items-center h-5">
                 <input
@@ -386,6 +339,55 @@ const signatoryCount = (await db.select({ count: count() }).from(Signator))[0]
                 {inputErrors["accept-privacy"] && (
                   <p class="text-sm text-red-600">
                     {inputErrors["accept-privacy"].join(", ")}
+                  </p>
+                )}
+              </div>
+            </label>
+
+            <label for="public" class="flex items-start cursor-pointer">
+              <div class="flex items-center h-5">
+                <input
+                  transition:persist
+                  id="public"
+                  name="public"
+                  type="checkbox"
+                  class="h-4 w-4 cursor-pointer text-sky-600 focus:ring-sky-500 border-gray-300 rounded"
+                />
+              </div>
+              <div class="ml-3 text-sm">
+                <div class="font-medium text-gray-700">
+                  Apareixer a la{" "}
+                  <a href="/signatories" class="text-blue-600 hover:underline">
+                    llista pública de signataris
+                  </a>
+                  .
+                </div>
+                {inputErrors.public && (
+                  <p class="text-sm text-red-600">
+                    {inputErrors.public.join(", ")}.
+                  </p>
+                )}
+              </div>
+            </label>
+
+            <label for="subscribed" class="flex items-start cursor-pointer">
+              <div class="flex items-center h-5">
+                <input
+                  transition:persist
+                  id="subscribed"
+                  name="subscribed"
+                  type="checkbox"
+                  class="h-4 w-4 cursor-pointer text-sky-600 focus:ring-sky-500 border-gray-300 rounded"
+                />
+              </div>
+              <div class="ml-3 text-sm">
+                <div class="font-medium text-gray-700">
+                  Rebre actualitzacions sobre l'iniciativa per email.
+                </div>
+
+                {inputErrors.subscribed && (
+                  <p class="text-sm text-red-600">
+                    {inputErrors.subscribed.join(", ")}
                   </p>
                 )}
               </div>
@@ -419,7 +421,7 @@ const signatoryCount = (await db.select({ count: count() }).from(Signator))[0]
               <p>
                 Al signar, les dades proporcionades es guardaràn encriptades a
                 la nostra base de dades fins que hagi passat un temps
-                prudencial, de màxim 1 any, després de que la petició sigui
+                prudencial, de màxim 6 mesos, després de que la petició sigui
                 acceptada validament per l'Ajuntament de Begur i ja no siguin
                 necessàries.
               </p>

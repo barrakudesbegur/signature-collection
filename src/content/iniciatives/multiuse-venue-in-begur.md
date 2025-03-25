@@ -4,9 +4,6 @@ description: "Iniciativa popular per a un local polivalent a Begur"
 author: "l'associacionisme begurenc"
 email: hola@barrakudesbegur.org
 signatureTarget: [300, 400, 500, 600, 700, 800, 1000, 1200, 1500, 1700, 2000, 2500, 3000, 3500, 4000, 5000, 10000]
-updates:
-  - date: 2024-03-22
-    message: "Això és una prova! No és la versió final."
 featured:
   - type: organization
     name: Barrakudes de Begur

@@ -63,7 +63,7 @@ function generateSignatory(id: number) {
     identificationDocumentEncrypted: encryptDataWithEnv(identificationDocument),
     identificationDocumentHash: hashDataWithEnv(identificationDocument),
     birthDate,
-    municipality: faker.helpers.arrayElement(["Begur", "Esclanyà"]),
+    municipality: faker.helpers.arrayElement(["Begur", "Esclanyà", "Altres"]),
     public: isPublic,
     comment,
     email: faker.internet
